@@ -1,6 +1,10 @@
 var mongoose = require('mongoose');
 
-var Question = mongoose.model('Question', {
+var Answer = mongoose.model('Answer', {
+  q_id:{
+    type: String,
+    required: true
+  },
   title: {
     type: String,
     required: true,
@@ -15,21 +19,17 @@ var Question = mongoose.model('Question', {
   picture: {
     type: String,
   },
-  status_answered: {
-    type: String,
+  status: {
+    type: Number
   },
   time_created: {
     type: Number,
     default: null
-  }
+  },
   time_changed: {
     type: Number,
     default: null
-  }
-  time_answered: {
-    type: Number,
-    default: null
-  }
+  },
 });
 
-module.exports = {Question};
+module.exports = {Answer};

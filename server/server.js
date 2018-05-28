@@ -7,6 +7,7 @@ const {ObjectID} = require('mongodb');
 
 var {mongoose} = require('./db/mongoose');
 var {Question} = require('./models/question');
+var {Answer} = require('./models/answer');
 var {User} = require('./models/user');
 
 var app = express();
@@ -28,11 +29,77 @@ app.post('/questions', (req, res) => {
   });
 });
 
+// POST answer for specific question id
+app.post('/answers/:q_id', (req, res) => {
+  const q_id = req.params.q_id;
+
+  // validate question id
+  if (!ObjectID.isValid(q_id)) {
+    return res.status(404).send();
+  }
+  Question.findById(q_id).then((question) => {
+    if (!question) {
+      return res.status(404).send();
+    }
+  }).catch((e) => {
+    res.status(400).send();
+  });
+
+  const answer = new Answer({
+    q_id,
+    title: req.body.title,
+    description: req.body.description,
+    time_created: new Date().getTime()
+  });
+
+  answer.save().then((doc) => {
+    res.send(doc);
+  }, (e) => {
+    res.status(400).send(e);
+  });
+});
+
 app.get('/questions', (req, res) => {
   Question.find().then((questions) => {
     res.send({questions});
   }, (e) => {
     res.status(400).send(e);
+  });
+});
+
+// debug API to retrieve all answers
+app.get('/answers', (req, res) => {
+  Answer.find().then((answers) => {
+    res.send({answers});
+  }, (e) => {
+    res.status(400).send(e);
+  });
+});
+
+// GET answers for specific question
+app.get('/answers/:q_id', (req, res) => {
+  var q_id = req.params.q_id;
+
+  if (!ObjectID.isValid(q_id)) {
+    return res.status(400).send();
+  }
+
+  Question.findById(q_id).then((question) => {
+    if (!question) {
+      return res.status(400).send();
+    }
+
+    Answer.find({"q_id": q_id}).then((answer) => {
+      console.log('answer type of', typeof answer[0] );
+      if (!answer || !answer[0]) {
+        return res.status(404).send();
+      }
+      res.send({answer});
+    }).catch((e) => {
+      res.status(400).send();
+    });
+  }).catch((e) => {
+    res.status(400).send();
   });
 });
 

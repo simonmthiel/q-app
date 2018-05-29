@@ -17,11 +17,11 @@ const port = process.env.PORT;
 app.use(bodyParser.json());
 
 app.post('/questions', authenticate, (req, res) => {
-  console.log('req', req.body);
   const question = new Question({
     title: req.body.title,
     description: req.body.description,
-    time_created: new Date().getTime()
+    time_created: new Date().getTime(),
+    u_id: req.user._id
   });
 
   question.save().then((doc) => {
@@ -31,8 +31,9 @@ app.post('/questions', authenticate, (req, res) => {
   });
 });
 
-// POST answer for specific question id
-app.post('/answers/:q_id', (req, res) => {
+
+// POST answer for specific question id (any (community) question)
+app.post('/answers/:q_id', authenticate, (req, res) => {
   const q_id = req.params.q_id;
 
   // validate question id
@@ -55,6 +56,7 @@ app.post('/answers/:q_id', (req, res) => {
     title: req.body.title,
     description: req.body.description,
     time_created: new Date().getTime(),
+    u_id: req.user._id
   });
 
   answer.save().then((doc) => {
@@ -65,16 +67,58 @@ app.post('/answers/:q_id', (req, res) => {
 });
 
 
-app.get('/questions', (req, res) => {
-  Question.find().then((questions) => {
+//GET all open community questions
+// filter for user != req.user && status_answered == false
+app.get('/questions', authenticate, (req, res) => {
+  Question.find({
+    u_id: {$ne: req.user._id},
+    status_answered: false
+  }).then((questions) => {
     res.send({questions});
   }, (e) => {
     res.status(400).send(e);
   });
 });
 
+
+//GET all/opened/answered own questions
+// filter for user = req.user
+app.get('/questions/own/:status', authenticate, (req, res) => {
+  let status_answered;
+  let queryObject = {};
+  if(req.params.status === 'open' || req.params.status === 'answered') {
+    if(req.params.status === 'open') status_answered = false;
+    else if(req.params.status === 'answered') status_answered = true;
+    queryObject = {
+      u_id: req.user._id,
+      status_answered
+    }
+  } else if(req.params.status === 'all') {
+    queryObject = {
+      u_id: req.user._id
+    }
+  } else {
+    return res.status(400).send('invalid endpoint');
+  }
+  Question.find(queryObject).then((questions) => {
+    res.send({questions});
+  }, (e) => {
+    res.status(400).send(e);
+  });
+});
+
+//GET all own created answers
+// filter for user = req.user
+app.get('/answers/', authenticate, (req, res) => {
+  Answer.find({u_id: req.user._id}).then((answer) => {
+    res.send({answer});
+  }, (e) => {
+    res.status(400).send(e);
+  });
+});
+
 // GET answers for specific question
-app.get('/answers/:q_id', (req, res) => {
+app.get('/answers/:q_id',  authenticate, (req, res) => {
   var q_id = req.params.q_id;
 
   if (!ObjectID.isValid(q_id)) {
@@ -83,7 +127,7 @@ app.get('/answers/:q_id', (req, res) => {
 
   Question.findById(q_id).then((question) => {
     if (!question) {
-      return res.status(400).send();
+      return res.status(404).send();
     }
     Answer.find({"q_id": q_id}).then((answers) => {
       if (!answers[0]) {
@@ -102,7 +146,8 @@ app.get('/answers/:q_id', (req, res) => {
   });
 });
 
-app.get('/questions/:id', (req, res) => {
+
+app.get('/questions/:id',  authenticate, (req, res) => {
   var id = req.params.id;
 
   if (!ObjectID.isValid(id)) {
@@ -120,26 +165,54 @@ app.get('/questions/:id', (req, res) => {
   });
 });
 
-app.delete('/questions/:id', (req, res) => {
-  var id = req.params.id;
+//TODO fix
+app.delete('/questions/:id', authenticate, (req, res) => {
+  var q_id = req.params.id;
 
-  if (!ObjectID.isValid(id)) {
+  if (!ObjectID.isValid(q_id)) {
     return res.status(404).send();
   }
 
-  Question.findByIdAndRemove(id).then((question) => {
+  Question.findByIdAndRemove({_id: q_id, u_id: req.user._id}).then((question) => {
     if (!question) {
       return res.status(404).send();
     }
-
-    res.send({question});
+    Answer.findByIdAndRemove({q_id, u_id: req.user._id}).then((answer) => {
+      const response = {
+        question,
+        answers
+      }
+      res.send({response});
+    }).catch((e) => {
+      res.status(400).send();
+    });
   }).catch((e) => {
     res.status(400).send();
   });
 });
 
+
+app.delete('/answers/:id', authenticate, (req, res) => {
+  var a_id = req.params.id;
+
+  if (!ObjectID.isValid(a_id)) {
+    return res.status(404).send();
+  }
+
+  Answer.findByIdAndRemove({_id: a_id, u_id: req.user._id}).then((answer) => {
+    if (!answer) {
+      return res.status(404).send();
+    }
+
+    res.send({answer});
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
+
+
 // PATCH answers by specific answer ID
-app.patch('/answers/:a_id', (req, res) => {
+app.patch('/answers/:a_id', authenticate, (req, res) => {
   var id = req.params.a_id;
   var body = _.pick(req.body, ['title', 'description', 'status']);
 
@@ -161,7 +234,7 @@ app.patch('/answers/:a_id', (req, res) => {
   });
 
 
-app.patch('/questions/:id', (req, res) => {
+app.patch('/questions/:id', authenticate, (req, res) => {
   var id = req.params.id;
   var body = _.pick(req.body, ['title', 'description']);
 

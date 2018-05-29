@@ -1,6 +1,10 @@
 var mongoose = require('mongoose');
 
 var Question = mongoose.model('Question', {
+  u_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  },
   title: {
     type: String,
     required: true,

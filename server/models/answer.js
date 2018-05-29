@@ -1,10 +1,14 @@
 var mongoose = require('mongoose');
 
 var Answer = mongoose.model('Answer', {
+  u_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  },
   q_id:{
     type: String,
     required: true
-  },  
+  },
   status: {
     type: Number
   },

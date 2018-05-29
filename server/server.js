@@ -37,10 +37,13 @@ app.post('/answers/:q_id', (req, res) => {
   if (!ObjectID.isValid(q_id)) {
     return res.status(404).send();
   }
-  Question.findById(q_id).then((question) => {
+
+  // update question status to answered
+  Question.findByIdAndUpdate(q_id, {$set: {status_answered: true, time_answered: new Date().getTime()}}, {new: true}).then((question) => {
     if (!question) {
       return res.status(404).send();
     }
+
   }).catch((e) => {
     res.status(400).send();
   });
@@ -49,7 +52,7 @@ app.post('/answers/:q_id', (req, res) => {
     q_id,
     title: req.body.title,
     description: req.body.description,
-    time_created: new Date().getTime()
+    time_created: new Date().getTime(),
   });
 
   answer.save().then((doc) => {
@@ -59,18 +62,10 @@ app.post('/answers/:q_id', (req, res) => {
   });
 });
 
+
 app.get('/questions', (req, res) => {
   Question.find().then((questions) => {
     res.send({questions});
-  }, (e) => {
-    res.status(400).send(e);
-  });
-});
-
-// debug API to retrieve all answers
-app.get('/answers', (req, res) => {
-  Answer.find().then((answers) => {
-    res.send({answers});
   }, (e) => {
     res.status(400).send(e);
   });
@@ -88,13 +83,15 @@ app.get('/answers/:q_id', (req, res) => {
     if (!question) {
       return res.status(400).send();
     }
-
-    Answer.find({"q_id": q_id}).then((answer) => {
-      console.log('answer type of', typeof answer[0] );
-      if (!answer || !answer[0]) {
+    Answer.find({"q_id": q_id}).then((answers) => {
+      if (!answers[0]) {
         return res.status(404).send();
       }
-      res.send({answer});
+      const response = {
+        question,
+        answers
+      }
+      res.send({response});
     }).catch((e) => {
       res.status(400).send();
     });
@@ -139,20 +136,38 @@ app.delete('/questions/:id', (req, res) => {
   });
 });
 
-app.patch('/questions/:id', (req, res) => {
-  var id = req.params.id;
-  var body = _.pick(req.body, ['title', 'description', 'completed']);
+// PATCH answers by specific answer ID
+app.patch('/answers/:a_id', (req, res) => {
+  var id = req.params.a_id;
+  var body = _.pick(req.body, ['title', 'description', 'status']);
 
   if (!ObjectID.isValid(id)) {
     return res.status(404).send();
   }
 
-  if (_.isBoolean(body.completed) && body.completed) {
-    body.time_answered = new Date().getTime();
-  } else {
-    body.completed = false;
-    body.time_changed = new Date().getTime();
+  body.time_updated = new Date().getTime();
+
+  Answer.findByIdAndUpdate(id, {$set: body}, {new: true}).then((answer) => {
+    if (!answer) {
+      return res.status(404).send();
+    }
+
+    res.send({answer});
+  }).catch((e) => {
+    res.status(400).send();
+  })
+  });
+
+
+app.patch('/questions/:id', (req, res) => {
+  var id = req.params.id;
+  var body = _.pick(req.body, ['title', 'description']);
+
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
   }
+
+  body.time_updated = new Date().getTime();
 
   Question.findByIdAndUpdate(id, {$set: body}, {new: true}).then((question) => {
     if (!question) {

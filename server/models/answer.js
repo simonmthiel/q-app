@@ -4,6 +4,9 @@ var Answer = mongoose.model('Answer', {
   q_id:{
     type: String,
     required: true
+  },  
+  status: {
+    type: Number
   },
   title: {
     type: String,
@@ -19,14 +22,11 @@ var Answer = mongoose.model('Answer', {
   picture: {
     type: String,
   },
-  status: {
-    type: Number
-  },
   time_created: {
     type: Number,
     default: null
   },
-  time_changed: {
+  time_updated: {
     type: Number,
     default: null
   },

@@ -117,6 +117,7 @@ app.get('/answers/', authenticate, (req, res) => {
   });
 });
 
+
 // GET answers for specific question
 app.get('/answers/:q_id',  authenticate, (req, res) => {
   var q_id = req.params.q_id;

@@ -134,11 +134,11 @@ app.get('/answers/:q_id',  authenticate, (req, res) => {
       if (!answers[0]) {
         return res.status(404).send();
       }
-      const response = {
+      /*const response = {
         question,
         answers
-      }
-      res.send({response});
+      }*/
+      res.send({answers});
     }).catch((e) => {
       res.status(400).send();
     });

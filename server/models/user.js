@@ -44,11 +44,11 @@ UserSchema.methods.generateAuthToken = function () {
   var user = this;
   var access = 'auth';
   var token = jwt.sign({_id: user._id.toHexString(), access}, 'abc123').toString();
-  console.log('token', token);
-  console.log('user', user);
+//  console.log('token', token);
+  // console.log('user', user);
   user.tokens = user.tokens.concat([{access, token}]);
 
-  console.log('signed in user', user);
+  // console.log('signed in user', user);
 
   return user.save().then(() => {
     return token;
@@ -68,10 +68,10 @@ UserSchema.methods.removeToken = function (token) {
 UserSchema.statics.findByToken = function (token) {
   var User = this;
   var decoded;
-  console.log('token', token);
+//  console.log('token', token);
   try {
     decoded = jwt.verify(token, 'abc123');
-    console.log('decoded', decoded);
+//    console.log('decoded', decoded);
   } catch (e) {
     return Promise.reject();
   }

@@ -17,6 +17,7 @@ const port = process.env.PORT;
 app.use(bodyParser.json());
 
 app.post('/questions', authenticate, (req, res) => {
+  console.log('Into API questions/');
   const question = new Question({
     title: req.body.title,
     description: req.body.description,
@@ -34,8 +35,8 @@ app.post('/questions', authenticate, (req, res) => {
 
 // POST answer for specific question id (any (community) question)
 app.post('/answers/:q_id', authenticate, (req, res) => {
+  console.log('Into API POST answers/:id');
   const q_id = req.params.q_id;
-
   // validate question id
   if (!ObjectID.isValid(q_id)) {
     return res.status(404).send();
@@ -84,6 +85,7 @@ app.get('/questions', authenticate, (req, res) => {
 //GET all/opened/answered own questions
 // filter for user = req.user
 app.get('/questions/own/:status', authenticate, (req, res) => {
+  console.log('Into API questions/own:status');
   let status_answered;
   let queryObject = {};
   if(req.params.status === 'open' || req.params.status === 'answered') {
@@ -120,25 +122,29 @@ app.get('/answers/', authenticate, (req, res) => {
 
 // GET answers for specific question
 app.get('/answers/:q_id',  authenticate, (req, res) => {
-  var q_id = req.params.q_id;
+  console.log('Into API GET answers/:q_id');
+  debugger;
+  let q_id = req.params.q_id;
 
   if (!ObjectID.isValid(q_id)) {
     return res.status(400).send();
   }
 
   Question.findById(q_id).then((question) => {
+    console.log('Question: ', question);
     if (!question) {
       return res.status(404).send();
     }
-    Answer.find({"q_id": q_id}).then((answers) => {
-      if (!answers[0]) {
-        return res.status(404).send();
-      }
+    Answer.find({q_id}).then((answer) => {
+      console.log('Answer: ', answer);
+   if (!answer[0]) {
+     return res.status(404).send();
+   }
       /*const response = {
         question,
         answers
       }*/
-      res.send({answers});
+      res.send({answer});
     }).catch((e) => {
       res.status(400).send();
     });
@@ -261,7 +267,7 @@ app.patch('/questions/:id', authenticate, (req, res) => {
 app.post('/users', (req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
   var user = new User(body);
-
+  debugger;
   user.save().then(() => {
     return user.generateAuthToken();
   }).then((token) => {
@@ -275,6 +281,18 @@ app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
 });
 
+// POST /login
+app.post('/login', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+  User.findByCredentials(body.email, body.password).then((user) => {
+    res.header('x-auth', user.tokens[0].token).send(user);
+  }, (e) => {
+    res.status(400).send(e);
+  });
+
+
+
+});
 
 app.listen(port, () => {
   console.log(`Started up at port ${port}`);

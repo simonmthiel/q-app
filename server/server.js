@@ -102,7 +102,7 @@ app.get('/questions/own/:status', authenticate, (req, res) => {
   } else {
     return res.status(400).send('invalid endpoint');
   }
-  Question.find(queryObject).then((questions) => {
+  Question.find(queryObject).sort({ time_created: -1 }).then((questions) => {
     res.send({questions});
   }, (e) => {
     res.status(400).send(e);

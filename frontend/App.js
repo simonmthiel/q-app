@@ -3,6 +3,7 @@ import { View, Text, Button, StyleSheet, TextInput, FlatList, TouchableHighlight
 import { createStackNavigator, params} from 'react-navigation';
 
 import HomeScreen from './components/homescreen';
+import InitialPage from './components/initialpage';
 
 class AnswerPage extends React.Component {
 
@@ -477,7 +478,7 @@ class RegistrationPage extends React.Component {
         //token: responseObj.token // work around as long as below code is not working
       });
 
-      this.props.navigation.navigate('Question', {tokenP: this.token});
+      this.props.navigation.navigate('Menu', {tokenP: this.token});
 
 
   //    try {
@@ -500,7 +501,87 @@ class RegistrationPage extends React.Component {
       <View style={{flex:1}}>
         <Registration
           onSubmitRegistration={this.onSubmitRegistration.bind(this)}
-          buttonText={'Registration'}>
+          buttonText={'Registration'}
+          headline={'Hier kannst du dich registrieren'}>
+        </Registration>
+        <View style={styles.container}>
+
+          <Text>Deine E-Mail: {this.state.email}</Text>
+
+          <Text>Deine NutzerID: {this.state.id}</Text>
+
+
+        </View>
+      </View>
+
+
+    );
+  }
+}
+
+
+class LoginPage extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.token = '';
+    this.state = {
+      email: '',
+      password: '',
+      statusMessage: 'bisher keine Aktion ausgeführt'
+    };
+  }
+
+  onSubmitLogin(email, password) {
+    this.setState({
+      email: email,
+      password: password
+    });
+
+    return fetch('https://radiant-tor-74073.herokuapp.com/login', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    })
+    .then(response =>
+      response.json()
+      .then(responseJson => ({
+        body: responseJson,
+        token: response.headers.get('x-auth')
+      })
+    ))
+    .then((responseObj) => {
+      console.log('API POST users/ responseObj: ', responseObj);
+      this.token = responseObj.token;
+      this.setState({
+        email: responseObj.body.email,
+        id: responseObj.body._id,
+        //token: responseObj.token // work around as long as below code is not working
+      });
+
+      this.props.navigation.navigate('Menu', {tokenP: this.token});
+    });
+  }
+
+
+
+
+
+  render() {
+    console.log(this.state.email);
+    return (
+      <View style={{flex:1}}>
+        <Registration
+          onSubmitRegistration={this.onSubmitLogin.bind(this)}
+          buttonText={'Einloggen'}
+          headline={'Gib deine Logindaten ein'}
+          >
         </Registration>
         <View style={styles.container}>
 
@@ -535,7 +616,7 @@ class Registration extends React.Component {
   render() {
     return(
       <View style={styles.container}>
-        <Text>Registiere dich mit deiner E-Mail und einem Passwort</Text>
+        <Text>{this.props.headline}</Text>
         <TextInput
           style={{height: 40, borderColor: 'gray', borderWidth: 1}}
           onChangeText={(email) => this.setState({email})}
@@ -608,7 +689,11 @@ const styles = StyleSheet.create({
 
 
 export default createStackNavigator({
+
   Home: {
+    screen: InitialPage
+  },
+  Start: {
     screen: HomeScreen
   },
   Menu: {
@@ -616,6 +701,9 @@ export default createStackNavigator({
   },
   Registration: {
     screen: RegistrationPage
+  },
+  Login: {
+    screen: LoginPage
   },
   Question: {
     screen: QuestionCreationPage

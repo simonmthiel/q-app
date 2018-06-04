@@ -123,37 +123,45 @@ app.get('/answers/', authenticate, (req, res) => {
 
 
 // GET answers for specific question
-app.get('/answers/:q_id',  authenticate, (req, res) => {
-  console.log('Into API GET answers/:q_id');
-  debugger;
-  let q_id = req.params.q_id;
-
-  if (!ObjectID.isValid(q_id)) {
-    return res.status(400).send();
-  }
-
-  Question.findById(q_id).then((question) => {
-    console.log('Question: ', question);
-    if (!question) {
-      return res.status(404).send();
-    }
-    Answer.find({q_id}).then((answer) => {
-      console.log('Answer: ', answer);
-   if (!answer[0]) {
-     return res.status(404).send();
-   }
-      /*const response = {
-        question,
-        answers
-      }*/
-      res.send({answer});
-    }).catch((e) => {
-      res.status(400).send();
-    });
-  }).catch((e) => {
-    res.status(400).send();
+app.get('/answers/:q_id', authenticate, (req, res) => {
+  console.log('Into API GET answers/:q_id for q_id: ', req.params.q_id);
+  Answer.find({q_id:req.params.q_id}).then((answer) => {
+    res.send({answer});
+  }, (e) => {
+    res.status(400).send(e);
   });
 });
+// app.get('/answers/:q_id',  authenticate, (req, res) => {
+//   console.log('Into API GET answers/:q_id');
+//   debugger;
+//   let q_id = req.params.q_id;
+//
+//   if (!ObjectID.isValid(q_id)) {
+//     return res.status(400).send();
+//   }
+//
+//   Question.findById(q_id).then((question) => {
+//     console.log('Question: ', question);
+//     if (!question) {
+//       return res.status(404).send();
+//     }
+//     Answer.find({q_id}).then((answer) => {
+//       console.log('Answer: ', answer);
+//    if (!answer[0]) {
+//      return res.status(404).send();
+//    }
+//       /*const response = {
+//         question,
+//         answers
+//       }*/
+//       res.send({answer});
+//     }).catch((e) => {
+//       res.status(400).send();
+//     });
+//   }).catch((e) => {
+//     res.status(400).send();
+//   });
+// });
 
 
 app.get('/questions/:id',  authenticate, (req, res) => {

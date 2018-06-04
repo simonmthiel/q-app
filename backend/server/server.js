@@ -88,6 +88,7 @@ app.get('/questions/own/:status', authenticate, (req, res) => {
   console.log('Into API questions/own:status');
   let status_answered;
   let queryObject = {};
+  console.log('inside API GET questions/own/. u_id: ', u_id);
   if(req.params.status === 'open' || req.params.status === 'answered') {
     if(req.params.status === 'open') status_answered = false;
     else if(req.params.status === 'answered') status_answered = true;

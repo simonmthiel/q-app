@@ -7,7 +7,8 @@ export default class HomeScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YjBlZWY5MDQ0YmMzYjAwMTQ4MGYxZGQiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTI3NzA1NDg4fQ.04EgsC8oVacSZh5_2jJNHbVkVmOZEFQ6ZRqnQ6w_8S4';// use hardcoded token for testing without registration // this.props.navigation.getParam('tokenP');
+    this.token = this.props.navigation.getParam('tokenP', 'NO-TOKEN');
+    //this.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YjBlZWY5MDQ0YmMzYjAwMTQ4MGYxZGQiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTI3NzA1NDg4fQ.04EgsC8oVacSZh5_2jJNHbVkVmOZEFQ6ZRqnQ6w_8S4';// use hardcoded token for testing without registration // this.props.navigation.getParam('tokenP');
   }
 
 componentDidMount() {

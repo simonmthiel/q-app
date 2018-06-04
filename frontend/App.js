@@ -24,7 +24,7 @@ class AnswerPage extends React.Component {
 
   getAnswer() {
     console.log('into getAnswer()');
-    const url = 'https://radiant-tor-74073.herokuapp.com/answers/'; //5b13febf6b01c638c93d3ed4'; //5b13febf6b01c638c93d3ed4'; // TODO fix response.json() issue
+    const url = 'https://radiant-tor-74073.herokuapp.com/answers/' + this.q_id; //5b13febf6b01c638c93d3ed4'; //5b13febf6b01c638c93d3ed4'; // TODO fix response.json() issue
     return fetch(url, {
       method: 'GET',
       headers: {
@@ -43,19 +43,14 @@ class AnswerPage extends React.Component {
     .then((responseObj) => {
       console.log('API GET answers/:q_id response', responseObj);
       // filter relevant answers for question TODO: retrieve only relevant answer from API after API fix
-      const arrayAllAnswers = responseObj.body.answer;
-      let relevantAnswers;
-      let relevant_q_id = this.q_id;
-      relevantAnswers = arrayAllAnswers.filter(function(answer) {
-        return answer.q_id == relevant_q_id;
-      });
-      console.log('relevantAnswers: ', relevantAnswers);
-      if(responseObj.status === 200 && relevantAnswers.length > 0) {
+      const responseAnswers = responseObj.body.answer;
+      console.log('responseAnswers: ', responseAnswers);
+      if(responseObj.status === 200 && responseAnswers.length > 0) {
         this.setState({
-          responseAnswerBody: relevantAnswers, //responseObj.body,
+          responseAnswerBody: responseAnswers, //responseObj.body,
           responseAnswerStatus: responseObj.status
         });
-      } else if (relevantAnswers.length === 0) {
+      } else if (responseAnswers.length === 0) {
         this.setState({responseAnswerStatus: 404});
       } else {
         this.setState({responseAnswerStatus: response.status});

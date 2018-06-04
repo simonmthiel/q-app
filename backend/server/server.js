@@ -113,7 +113,8 @@ app.get('/questions/own/:status', authenticate, (req, res) => {
 //GET all own created answers
 // filter for user = req.user
 app.get('/answers/', authenticate, (req, res) => {
-  Answer.find({u_id: req.user._id}).then((answer) => {
+  console.log('Into API GET answers');
+  Answer.find().then((answer) => {
     res.send({answer});
   }, (e) => {
     res.status(400).send(e);

@@ -192,6 +192,7 @@ class QuestionCreationPage extends React.Component {
   constructor(props) {
     super(props);
     this.token = this.props.navigation.getParam('tokenP', 'NO-TOKEN');
+    console.log('token recieved on QuestionCreationPage: ', this.token);
     this.state = {
       //token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YjBmNWZiZTc1N2E1NzAwMTRlMzUwYjkiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTI3NzM0MjA3fQ.i8f1BTpL0DlcR32jGAXs2SNgFFef31u3iV16rUwk-Z4',
       statusMessage: 'bisher keine Aktion ausgeführt',

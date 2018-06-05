@@ -2,8 +2,10 @@ import React from 'react';
 import { View, Text, Button, StyleSheet, TextInput, TouchableHighlight} from 'react-native';
 import { createStackNavigator, params} from 'react-navigation';
 
+import * as constants from './../config/config';
+import TEXTS from './../config/text';
 
-export default class HomeScreen extends React.Component {
+export default class MenuPage extends React.Component {
 
   constructor(props) {
     super(props);
@@ -31,7 +33,7 @@ export default class HomeScreen extends React.Component {
 
            <TouchableHighlight
             style={styles.buttonMenu}
-            onPress={() => {this.props.navigation.navigate('Question', {
+            onPress={() => {this.props.navigation.navigate('QuestionCreation', {
               tokenP: this.token
             })}}
             underlayColor='#fff'>

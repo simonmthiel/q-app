@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, Button, StyleSheet, TextInput, TouchableHighlight} from 'react-native';
 import { createStackNavigator, params} from 'react-navigation';
 
+import * as constants from './../config/config';
+import TEXTS from './../config/text';
 
 export default class InitialPage extends React.Component {
 
@@ -19,7 +21,6 @@ componentDidMount() {
   render(){
     return(
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-
            <TouchableHighlight
             style={styles.buttonMenu}
             onPress={() => {this.props.navigation.navigate('Login')}}
@@ -33,7 +34,6 @@ componentDidMount() {
             underlayColor='#fff'>
               <Text style={styles.submitText}>Registieren</Text>
           </TouchableHighlight>
-
       </View>
     );
   }

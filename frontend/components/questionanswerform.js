@@ -1,27 +1,25 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, TextInput, TouchableHighlight } from 'react-native';
-import { createStackNavigator, params } from 'react-navigation';
+import { View, Text, StyleSheet, TextInput, TouchableHighlight } from 'react-native';
 
 import * as constants from './../config/config';
 import TEXTS from './../config/text';
 
 import * as styleSheet from './../styles/styles';
 
-const globalStyles = styleSheet.global;
 const styles = StyleSheet.create(styleSheet.global);
 
-export default class TextInputForm extends React.Component {
+export default class QuestionAnswerForm extends React.Component {
   constructor(props) {
     super(props);
     this.onSubmitButtonClick = this.onSubmitButtonClick.bind(this);
     this.state = {
-      email: '',
-      password: '',
+      textfield1: '',
+      textfield2: '',
     };
   }
 
   onSubmitButtonClick() {
-    this.props.onSubmit(this.state.email, this.state.password);
+    this.props.onSubmit(this.state.textfield1, this.state.textfield2);
   }
 
   render() {
@@ -32,17 +30,17 @@ export default class TextInputForm extends React.Component {
         <Text style={styles.headline}>{this.props.headline}</Text>
         <TextInput
           style={styles.textInput}
-          onChangeText={email => this.setState({ email })}
-          value={this.state.email}
-          placeholder="E-Mail"
+          onChangeText={text => this.setState({ textfield1: text })}
+          value={this.state.textfield1}
+          placeholder={this.props.placeholder1}
           placeholderTextColor="#ccc"
         />
         <TextInput
-          style={styles.textInput}
-          onChangeText={password => this.setState({ password })}
-          value={this.state.password}
+          style={styles.textInputLarge}
+          onChangeText={text => this.setState({ textfield2: text })}
+          value={this.state.textfield2}
           placeholderTextColor="#ccc"
-          placeholder="Password"
+          placeholder={this.props.placeholder2}
         />
         <TouchableHighlight
           style={styles.button}

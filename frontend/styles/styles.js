@@ -59,25 +59,31 @@ export const global = {
     color: '#333',
     textAlign: 'center',
   },
-  itemFlatList: {
+  itemFlatListContainer: {
+    flexDirection: 'row',
     backgroundColor: '#fff',
     padding: 10,
-    fontSize: 14,
-    height: 55,
+    height: 85,
     borderWidth: 1,
-    borderColor: '#666',
+    borderColor: '#999',
   },
-  itemFlatListAnswered: {
-    backgroundColor: '#74DF00',
-    padding: 10,
-    fontSize: 14,
-    height: 55,
-    borderWidth: 1,
-    borderColor: '#666',
+  itemFlatList: {
+    flexDirection: 'column',
+    paddingLeft: 20,
   },
   itemFlatListTitle: {
     fontWeight: 'bold',
-    padding: 20,
+    paddingTop: 10,
+    fontSize: 14,
+    marginTop: -10,
   },
-  itemFlatListDecription: {},
+  itemFlatListDecription: {
+    fontSize: 14,
+  },
+  itemFlatListStatus: {
+    fontSize: 12,
+    color: '#666',
+    paddingTop: 5,
+    fontStyle: 'italic',
+  },
 };

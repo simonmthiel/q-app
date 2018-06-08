@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { createStackNavigator, params } from 'react-navigation';
 
+import ListView from './../components/listview';
 import * as constants from './../config/config';
 import TEXTS from './../config/text';
 
@@ -60,39 +61,25 @@ export default class QuestionOverviewPage extends React.Component {
       });
   }
 
+  redirectToAnswerPage(item) {
+    this.props.navigation.navigate('Answer', {
+      tokenP: this.token,
+      q_id: item._id, // TODO use corresponding ID of clicked question
+    });
+  }
+
   render() {
     console.log(
       'this.state.responseQuestionsAllBody.questions in render()',
       this.state.responseQuestionsAllBody.questions,
     );
     return (
-      <View style={{ flex: 1 }}>
-        <Text style={styles.headline}>Deine Fragen im Überblick</Text>
-        <FlatList
-          data={this.state.responseQuestionsAllBody.questions}
-          renderItem={({ item }) => {
-            const styleItemFlatList = item.status_answered
-              ? styles.itemFlatListAnswered
-              : styles.itemFlatList;
-            return (
-              <TouchableHighlight
-                onPress={() => {
-                  this.props.navigation.navigate('Answer', {
-                    tokenP: this.token,
-                    q_id: item._id, // TODO use corresponding ID of clicked question
-                  });
-                }}
-              >
-                <Text style={styleItemFlatList}>
-                  <Text style={styles.itemFlatListTitle}>{item.title}</Text>
-                  {'\n'}
-                  <Text style={styles.itemFlatListDescription}>{item.description}</Text>
-                </Text>
-              </TouchableHighlight>
-            );
-          }}
-        />
-      </View>
+      <ListView
+        headline="Dein Fragenübersicht"
+        description="Beweise dich als Profi und beantworte eine der Fragen aus der Community"
+        listData={this.state.responseQuestionsAllBody.questions}
+        clickOnListItem={this.redirectToAnswerPage.bind(this)}
+      />
     );
   }
 }

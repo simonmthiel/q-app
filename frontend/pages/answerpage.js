@@ -3,10 +3,12 @@ import { View, Text, Button, StyleSheet, TextInput, TouchableHighlight } from 'r
 import { createStackNavigator, params } from 'react-navigation';
 
 import * as constants from './../config/config';
-import TEXTS from './../config/text';
+import TEXT from './../config/text';
 import * as styleSheet from './../styles/styles';
 
 const styles = StyleSheet.create(styleSheet.global);
+
+import InfoMsgView from './../components/infomsgview';
 
 export default class AnswerPage extends React.Component {
   constructor(props) {
@@ -58,12 +60,19 @@ export default class AnswerPage extends React.Component {
       });
   }
 
+  navigate(target) {
+    this.props.navigation.navigate(target, {
+      tokenP: this.token,
+    });
+  }
+
   renderInfoMsgScreen(infoMsg) {
-    console.log('infoMsg: ', infoMsg);
     return (
-      <View>
-        <Text style={styles.description}>{infoMsg} </Text>
-      </View>
+      <InfoMsgView
+        infoMsg="Deine Frage wurde noch nicht beantwortet"
+        buttonText={TEXT.button.back_to_overview}
+        onButtonClick={this.navigate.bind(this, 'QuestionOverview')}
+      />
     );
   }
   renderAnswerSection(answer) {
@@ -71,9 +80,9 @@ export default class AnswerPage extends React.Component {
 
     return (
       <View>
-        <Text style={styles.subHeadline}>{answer.title} </Text>
+        <Text style={styles.subHeadline}>{answer.title}</Text>
 
-        <Text style={styles.description}>{answer.description} </Text>
+        <Text style={styles.description}>{answer.description}</Text>
       </View>
     );
   }

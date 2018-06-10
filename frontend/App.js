@@ -13,6 +13,7 @@ import { createStackNavigator, params } from 'react-navigation';
 // import SERVER_URL from './config/config.js';
 import * as constants from './config/config';
 import TEXTS from './config/text';
+import HEADER from './config/header';
 // import pages
 import MenuPage from './pages/menupage';
 import InitialPage from './pages/initialpage';
@@ -24,30 +25,17 @@ import CommunityQuestionOverviewPage from './pages/communityquestionoverviewpage
 import QuestionOverviewPage from './pages/questionoverviewpage';
 import QuestionCreationPage from './pages/questioncreationpage';
 
-export default createStackNavigator(
+export default class App extends React.Component {
+  render() {
+    return <RootStack />;
+  }
+}
+
+const MainStack = createStackNavigator(
   {
-    Home: {
-      screen: InitialPage,
-    },
-    /*
-  Initial Landing page for Login and Registration option in case user isn't logged in
-  Redirects to:
-  Redirection from:
-  TODO: try to retrieve token from local storage
-  */
-    Menu: {
+    Main: {
       screen: MenuPage,
     },
-    Registration: {
-      screen: RegistrationPage,
-    },
-    Login: {
-      screen: LoginPage,
-      navigationOptions: {
-        headerBackTitle: 'Zurück',
-      },
-    },
-
     QuestionCreation: {
       screen: QuestionCreationPage,
     },
@@ -65,9 +53,42 @@ export default createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Home',
     navigationOptions: {
       headerBackTitle: 'Zurück',
+      headerStyle: HEADER.style.headerStyle,
+      headerTintColor: HEADER.style.headerTintColor,
+      headerTitleStyle: HEADER.style.headerStyle,
+      // headerBackTitle: 'Zurück',
     },
+  },
+);
+
+const RootStack = createStackNavigator(
+  {
+    Home: {
+      screen: InitialPage,
+    },
+    /*
+    Initial Landing page for Login and Registration option in case user isn't logged in
+    Redirects to:
+    Redirection from:
+    TODO: try to retrieve token from local storage
+    */
+    Registration: {
+      screen: RegistrationPage,
+    },
+    Login: {
+      screen: LoginPage,
+      navigationOptions: {
+        headerBackTitle: 'Zurück',
+      },
+    },
+
+    Menu: {
+      screen: MainStack,
+    },
+  },
+  {
+    headerMode: 'none',
   },
 );

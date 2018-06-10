@@ -3,21 +3,20 @@ import { View, Text, Button, StyleSheet, TextInput, TouchableHighlight } from 'r
 import { createStackNavigator, params } from 'react-navigation';
 
 import * as constants from './../config/config';
-import TEXTS from './../config/text';
+import TEXT from './../config/text';
 
 import * as styleSheet from './../styles/styles';
 
 const styles = StyleSheet.create(styleSheet.global);
 
-export default class InitialPage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+import utilFunctions from './../utils/utilFunctions';
 
+export default class InitialPage extends React.Component {
   componentDidMount() {
     console.log('InitialPage loaded');
   }
 
+  // utilFunctions.logger('sdabad asdf asdf');
   render() {
     const customDebuggingButton = {
       width: 250,
@@ -43,6 +42,14 @@ export default class InitialPage extends React.Component {
     // );
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={styles.headline}>Willkommen bei der Mathe-App</Text>
+        <Text style={styles.descriptionCenter}>
+          In der neuen App erhälst du ganz einfach Antworten auf deine Matheprobleme.
+        </Text>
+        <Text style={styles.descriptionCenter}>
+          Probier es direkt aus und poste deine erste Frage
+        </Text>
+        <View style={{ height: 30 }} />
         <TouchableHighlight
           style={styles.buttonMenu}
           onPress={() => {

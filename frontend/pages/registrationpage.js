@@ -5,7 +5,7 @@ import { createStackNavigator, params } from 'react-navigation';
 import TextInputForm from './../components/textinputform';
 
 import * as constants from './../config/config';
-import TEXTS from './../config/text';
+import TEXT from './../config/text';
 import * as styleSheet from './../styles/styles';
 
 const styles = StyleSheet.create(styleSheet.global);

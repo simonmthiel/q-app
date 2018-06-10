@@ -71,7 +71,7 @@ export default class ListView extends React.Component {
       >
         <Text
           style={{
-            fontSize: 24,
+            fontSize: 18,
           }}
         >
           {emoji.get(iconCode)}

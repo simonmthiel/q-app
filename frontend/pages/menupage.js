@@ -3,12 +3,25 @@ import { View, Text, Button, StyleSheet, TextInput, TouchableHighlight } from 'r
 import { createStackNavigator, params } from 'react-navigation';
 
 import * as constants from './../config/config';
-import TEXTS from './../config/text';
+import TEXT from './../config/text';
 import * as styleSheet from './../styles/styles';
 
 const styles = StyleSheet.create(styleSheet.global);
 
 export default class MenuPage extends React.Component {
+  static navigationOptions = {
+    title: TEXT.menupage.headline,
+    headerRight: (
+      <Button
+        onPress={() => alert('Logout noch nicht implementiert')}
+        title="Logout"
+        color="#000"
+      />
+    ),
+    // https://reactnavigation.org/docs/en/stack-navigator.html#headerbacktitle
+    // headerTruncatedBackTitle: 'Zurück',
+    // headerBackTitle: 'Zurück',
+  };
   constructor(props) {
     super(props);
     this.token = this.props.navigation.getParam('tokenP', 'NO-TOKEN');

@@ -18,6 +18,11 @@ export const global = {
     fontSize: 14,
     padding: 10,
   },
+  descriptionCenter: {
+    fontSize: 14,
+    color: '#333',
+    textAlign: 'center',
+  },
   textInput: {
     height: 40,
     borderColor: 'gray',
@@ -64,8 +69,7 @@ export const global = {
     backgroundColor: '#fff',
     padding: 10,
     height: 85,
-    borderWidth: 1,
-    borderColor: '#999',
+    marginBottom: 1,
   },
   itemFlatList: {
     flexDirection: 'column',

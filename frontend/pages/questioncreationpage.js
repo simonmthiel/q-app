@@ -3,13 +3,18 @@ import { View, Text, Button, StyleSheet, TextInput, TouchableHighlight } from 'r
 import { createStackNavigator, params } from 'react-navigation';
 
 import * as constants from './../config/config';
-import TEXTS from './../config/text';
+import TEXT from './../config/text';
 import * as styleSheet from './../styles/styles';
 import QuestionAnswerForm from './../components/questionanswerform';
 
 const styles = StyleSheet.create(styleSheet.global);
 
 export default class QuestionCreationPage extends React.Component {
+  static navigationOptions = {
+    title: TEXT.questioncreationpage.headline,
+    // headerBackTitle: 'Zurück',
+  };
+
   constructor(props) {
     super(props);
     this.token = this.props.navigation.getParam('tokenP', 'NO-TOKEN');
@@ -35,7 +40,7 @@ export default class QuestionCreationPage extends React.Component {
         'x-auth': this.token,
       },
       body: JSON.stringify(requestBody),
-    }).then((response) => {
+    }).then(response => {
       console.log('API POST questions/ response', response);
       this.setState({
         statusMessage:
@@ -55,7 +60,6 @@ export default class QuestionCreationPage extends React.Component {
       <QuestionAnswerForm
         onSubmit={this.postQuestion.bind(this)}
         buttonText="Frage stellen"
-        headline="Stelle deine Frage"
         placeholder1="Thema deiner Frage"
         placeholder2="Beschreibe deine Frage"
       />

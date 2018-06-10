@@ -3,13 +3,18 @@ import { View, Text, Button, StyleSheet, TextInput, TouchableHighlight } from 'r
 import { createStackNavigator, params } from 'react-navigation';
 
 import * as constants from './../config/config';
-import TEXTS from './../config/text';
+import TEXT from './../config/text';
 import * as styleSheet from './../styles/styles';
 import QuestionAnswerForm from './../components/questionanswerform';
 
 const styles = StyleSheet.create(styleSheet.global);
 
 export default class AnswerCreationPage extends React.Component {
+  static navigationOptions = {
+    title: TEXT.answercreationpage.headline,
+    // headerBackTitle: 'Zurück',
+  };
+
   constructor(props) {
     super(props);
     this.token = this.props.navigation.getParam('tokenP', 'NO-TOKEN');
@@ -40,7 +45,7 @@ export default class AnswerCreationPage extends React.Component {
     console.log('endpoint POST answer', endpoint);
     console.log('Request of API POST answer/:q_id ', req);
 
-    return fetch(endpoint, req).then((response) => {
+    return fetch(endpoint, req).then(response => {
       console.log('API POST answer/:q_id response', response);
       this.setState({
         statusMessage:
@@ -60,7 +65,6 @@ export default class AnswerCreationPage extends React.Component {
       <QuestionAnswerForm
         onSubmit={this.postAnswer.bind(this)}
         buttonText="Frage beantworten"
-        headline="Beantworte die Frage"
         placeholder1="Überschrift"
         placeholder2="Deine Antwort auf die Frage"
       />

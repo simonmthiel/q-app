@@ -12,12 +12,17 @@ import { createStackNavigator, params } from 'react-navigation';
 
 import ListView from './../components/listview';
 import * as constants from './../config/config';
-import TEXTS from './../config/text';
+import TEXT from './../config/text';
 import * as styleSheet from './../styles/styles';
 
 const styles = StyleSheet.create(styleSheet.global);
 
 export default class CommunityQuestionOverviewPage extends React.Component {
+  static navigationOptions = {
+    title: TEXT.communityquestionoverviewpage.headline,
+    // headerBackTitle: 'Zurück',
+  };
+
   constructor(props) {
     super(props);
     this.token = this.props.navigation.getParam('tokenP', 'NO-TOKEN');
@@ -45,8 +50,9 @@ export default class CommunityQuestionOverviewPage extends React.Component {
         response.json().then(responseJson => ({
           body: responseJson,
           status: response.status,
-        })))
-      .then((responseObj) => {
+        })),
+      )
+      .then(responseObj => {
         console.log('API GET questions/ response', responseObj);
         if (responseObj.status === 200) {
           this.setState({
@@ -73,7 +79,6 @@ export default class CommunityQuestionOverviewPage extends React.Component {
     );
     return (
       <ListView
-        headline="Community Fragen"
         description="Beweise dich als Profi und beantworte eine der Fragen aus der Community"
         listData={this.state.responseQuestionsAllBody.questions}
         clickOnListItem={this.redirectToAnswerPage.bind(this)}

@@ -11,6 +11,11 @@ const styles = StyleSheet.create(styleSheet.global);
 import InfoMsgView from './../components/infomsgview';
 
 export default class AnswerPage extends React.Component {
+  static navigationOptions = {
+    title: TEXT.answerpage.headline,
+    // headerBackTitle: 'Zurück',
+  };
+
   constructor(props) {
     super(props);
     this.token = this.props.navigation.getParam('tokenP', 'NO-TOKEN');
@@ -41,8 +46,9 @@ export default class AnswerPage extends React.Component {
         response.json().then(responseJson => ({
           body: responseJson,
           status: response.status,
-        })))
-      .then((responseObj) => {
+        })),
+      )
+      .then(responseObj => {
         console.log('API GET answers/:q_id response', responseObj);
         // filter relevant answers for question TODO: retrieve only relevant answer from API after API fix
         const responseAnswers = responseObj.body.answer;
@@ -93,7 +99,9 @@ export default class AnswerPage extends React.Component {
     if (this.state.responseAnswerStatus === 200) {
       const arrayAnswersFromState = this.state.responseAnswerBody;
       console.log('arrayAnswersFromState: ', arrayAnswersFromState);
-      latestAnswer = arrayAnswersFromState.reduce((l, e) => (e.time_created > l.time_created ? e : l));
+      latestAnswer = arrayAnswersFromState.reduce(
+        (l, e) => (e.time_created > l.time_created ? e : l),
+      );
       console.log('latest answer: ', latestAnswer);
     } else {
       console.log('error call during API GET answers: ', this.state.responseAnswerStatus);
@@ -105,11 +113,6 @@ export default class AnswerPage extends React.Component {
       this.state.responseAnswerStatus === 200
         ? this.renderAnswerSection(latestAnswer)
         : this.renderInfoMsgScreen(infoMsg);
-    return (
-      <View style={styles.container}>
-        <Text style={styles.headline}>Die Antwort auf deine Frage</Text>
-        {answerSection}
-      </View>
-    );
+    return <View style={styles.container}>{answerSection}</View>;
   }
 }

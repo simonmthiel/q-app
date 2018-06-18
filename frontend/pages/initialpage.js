@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, Button, StyleSheet, TextInput, TouchableHighlight } from 'react-native';
 import { createStackNavigator, params } from 'react-navigation';
 
+import * as utilFunc from './../utils/utilFunctions';
+
 import * as constants from './../config/config';
 import TEXT from './../config/text';
 
@@ -9,11 +11,10 @@ import * as styleSheet from './../styles/styles';
 
 const styles = StyleSheet.create(styleSheet.global);
 
-import utilFunctions from './../utils/utilFunctions';
-
 export default class InitialPage extends React.Component {
   componentDidMount() {
-    console.log('InitialPage loaded');
+    const sampleLog = utilFunc.shortenText(30, 'Initial page loaded!');
+    utilFunc.logger(sampleLog);
   }
 
   // utilFunctions.logger('sdabad asdf asdf');

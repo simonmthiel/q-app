@@ -62,6 +62,8 @@ export const global = {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
+    fontWeight: 'bold',
+    color: '#333',
     textAlign: 'center',
   },
   itemFlatListContainer: {
@@ -89,5 +91,16 @@ export const global = {
     color: '#666',
     paddingTop: 5,
     fontStyle: 'italic',
+  },
+  errorContainer: {
+    flexDirection: 'column',
+    flex: 0.7,
+    backgroundColor: '#F6CECE',
+    padding: 15,
+    borderColor: '#B40404',
+    borderWidth: 0,
+  },
+  errorContainerHeadline: {
+    fontWeight: 'bold',
   },
 };

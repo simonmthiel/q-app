@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, Button, StyleSheet, TextInput, TouchableHighlight } from 'react-native';
 import { createStackNavigator, params } from 'react-navigation';
 
+import ErrorContainer from './../components/errorcontainer';
+
 import * as utilFunc from './../utils/utilFunctions';
 
 import * as constants from './../config/config';
@@ -96,6 +98,7 @@ export default class InitialPage extends React.Component {
         >
           <Text style={styles.buttonText}>debug: login2@thiel.de</Text>
         </TouchableHighlight>
+        <ErrorContainer headline="Fehler" text="Es ist folgender Fehler aufgetreten" />
       </View>
     );
   }

@@ -15,7 +15,9 @@ module.exports = {
     headline: 'Fragen der Community',
   },
   initialpage: {},
-  loginpage: {},
+  loginpage: {
+    loginNotFound: 'Bitte überprüfe deine Logindaten!',
+  },
   questioncreationpage: {
     headline: 'Stelle deine Frage',
   },
@@ -23,4 +25,9 @@ module.exports = {
     headline: 'Deine Fragenübersicht',
   },
   registrationpage: {},
+  errorcontainer: {
+    unknownError: 'Es ist ein unbekannter Fehler aufgetreten',
+    headline_code_901: 'Netzwerkfehler',
+    description_code_901: 'Bitte überprüfe deine Internetverbindung und probiere es erneut!',
+  },
 };

@@ -105,6 +105,7 @@ export default class ListView extends React.Component {
   }
   render() {
     const shortenTextLength = 50;
+    console.log('listView data: ', this.props.listData);
     return (
       <View>
         <View>
@@ -112,6 +113,7 @@ export default class ListView extends React.Component {
           {this.renderOptionalDescription()}
 
           <FlatList
+            style={styles.flatListContainer}
             data={this.props.listData}
             renderItem={({ item }) => (
               // TODO resolve warning

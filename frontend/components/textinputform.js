@@ -5,6 +5,8 @@ import { createStackNavigator, params } from 'react-navigation';
 import * as constants from './../config/config';
 import TEXTS from './../config/text';
 
+import ErrorContainer from './errorcontainer';
+
 import * as styleSheet from './../styles/styles';
 
 const globalStyles = styleSheet.global;
@@ -27,9 +29,16 @@ export default class TextInputForm extends React.Component {
   render() {
     const customButtonStyle = styleSheet.global.buttonMenu;
     delete styleSheet.global.buttonMenu.width;
+    const showErrorContainer = !(!this.props.errorCode || this.props.errorCode === 200);
+
     return (
       <View style={styles.container}>
         <Text style={styles.headline}>{this.props.headline}</Text>
+        {showErrorContainer ? (
+          <ErrorContainer errorCode={this.props.errorCode} errorMsg={this.props.errorMsg} />
+        ) : (
+          <React.Fragment />
+        )}
         <TextInput
           style={styles.textInput}
           onChangeText={email => this.setState({ email })}

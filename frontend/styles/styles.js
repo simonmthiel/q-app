@@ -66,6 +66,9 @@ export const global = {
     color: '#333',
     textAlign: 'center',
   },
+  flatListContainer: {
+    height: 450,
+  },
   itemFlatListContainer: {
     flexDirection: 'row',
     backgroundColor: '#fff',
@@ -94,13 +97,37 @@ export const global = {
   },
   errorContainer: {
     flexDirection: 'column',
-    flex: 0.7,
     backgroundColor: '#F6CECE',
     padding: 15,
+    flex: 1,
     borderColor: '#B40404',
     borderWidth: 0,
+    marginBottom: 10,
   },
   errorContainerHeadline: {
     fontWeight: 'bold',
+    color: '#B40404',
   },
+  errorContainerText: {
+    color: '#B40404',
+  },
+  loadingIndicatorContainer: {
+    flex: 1,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    opacity: 0.9,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  containerLoginPage: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 30,
+    paddingTop: 60,
+  },
+
+  // Flex to fill, position absolute,
+  // Fixed left/top, and the width set to the window width
 };

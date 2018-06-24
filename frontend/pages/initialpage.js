@@ -98,7 +98,6 @@ export default class InitialPage extends React.Component {
         >
           <Text style={styles.buttonText}>debug: login2@thiel.de</Text>
         </TouchableHighlight>
-        <ErrorContainer headline="Fehler" text="Es ist folgender Fehler aufgetreten" />
       </View>
     );
   }

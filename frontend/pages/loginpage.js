@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableHighlight,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native';
 import { createStackNavigator, params } from 'react-navigation';
 
@@ -65,6 +66,10 @@ export default class LoginPage extends React.Component {
       .then((responseObj) => {
         console.log('API POST users/ responseObj: ', responseObj);
         this.token = responseObj.token;
+        // this.saveToStorage(responseObj.token);
+        AsyncStorage.setItem('@MathApp:token', this.token, () => {
+          console.log('Token saved to local device storgage');
+        });
         this.setState(
           { showLoadingIndicator: false },
           this.props.navigation.navigate('Menu', { tokenP: this.token }),

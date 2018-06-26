@@ -1,5 +1,14 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, TextInput, TouchableHighlight } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  TextInput,
+  TouchableHighlight,
+  ActivityIndicator,
+  AsyncStorage,
+} from 'react-native';
 import { createStackNavigator, params } from 'react-navigation';
 
 import TextInputForm from './../components/textinputform';
@@ -9,6 +18,8 @@ import TEXT from './../config/text';
 import * as styleSheet from './../styles/styles';
 
 const styles = StyleSheet.create(styleSheet.global);
+
+const Dimensions = require('Dimensions');
 
 export default class RegistrationPage extends React.Component {
   constructor(props) {
@@ -20,35 +31,15 @@ export default class RegistrationPage extends React.Component {
     // const { params} = this.props.navigation.state;
     // this.liftUpState = navigation.props.liftUpState.bind(this);
     this.state = {
-      email: '',
-      password: '',
-      statusMessage: 'bisher keine Aktion ausgeführt',
+      showLoadingIndicator: false,
     };
-  }
-
-  componentDidMount() {
-    console.log('this.test', this.test);
-    try {
-      AsyncStorage.setItem('@MySuperStore:key', 'I like to save it.');
-      console.log('testSaving successfully saved');
-    } catch (error) {
-      console.log('testSaving failed', error);
-    }
-
-    // params.liftUpState();
-
-    //  try {
-    //    AsyncStorage.setItem('@Login:test', 'testSaving');
-    //    console.log('testSaving successfully saved');
-    //  } catch (error) {
-    //    console.log('testSaving failed', error);
-    //  }
   }
 
   onSubmitRegistration(email, password) {
     this.setState({
-      email,
-      password,
+      showLoadingIndicator: true,
+      statusCode: undefined,
+      statusMsg: undefined,
     });
 
     return fetch('https://radiant-tor-74073.herokuapp.com/users', {
@@ -62,41 +53,63 @@ export default class RegistrationPage extends React.Component {
         password,
       }),
     })
-      .then(response =>
-        response.json().then(responseJson => ({
-          body: responseJson,
-          token: response.headers.get('x-auth'),
-        })))
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json().then(responseJson => ({
+            body: responseJson,
+            token: response.headers.get('x-auth'),
+          }));
+        }
+        const errorObj = { statusCode: response.status, statusMsg: response.statusText };
+        throw errorObj;
+      })
       .then((responseObj) => {
         console.log('API POST users/ responseObj: ', responseObj);
         this.token = responseObj.token;
-        this.setState({
-          email: responseObj.body.email,
-          id: responseObj.body._id,
-          // token: responseObj.token // work around as long as below code is not working
+        AsyncStorage.setItem('@MathApp:token', this.token, (err) => {
+          console.log('Token saved to local device storgage:', err);
         });
-
-        this.props.navigation.navigate('Menu', { tokenP: this.token });
-
-        //    try {
-        //      AsyncStorage.setItem('@Login:token2', responseObj.token);
-        //      console.log('Token successfully saved: ', responseObj.token);
-        //    } catch (error) {
-        //      console.log('Error while saving token to local storage', error);
-        //    }
+        this.setState(
+          { showLoadingIndicator: false },
+          this.props.navigation.navigate('Menu', { tokenP: this.token }),
+        );
+        // token: responseObj.token // work around as long as below code is not working
+      })
+      .catch((e) => {
+        this.setState({
+          statusCode: e.statusCode ? e.statusCode : 901,
+          statusMsg: e.statusCode ? e.statusMsg : e.toString(),
+          showLoadingIndicator: false,
+        });
+        console.log('API POST users/ error: ', e);
       });
   }
 
   render() {
     //  const { navigate } = this.props.navigation;
-    console.log(this.state.email);
+    const { width, height } = Dimensions.get('window');
+
+    const showLoadingIndicator = this.state.showLoadingIndicator;
+    const statusMsg =
+      !this.state.statusMsg && this.state.statusCode === 400
+        ? TEXT.registrationpage.errorDuplicate
+        : this.state.statusMsg;
     return (
       <View style={{ flex: 1 }}>
         <TextInputForm
           onSubmit={this.onSubmitRegistration.bind(this)}
-          buttonText="Registration"
+          buttonText="Jetzt Registrieren"
           headline="Hier kannst du dich registrieren"
+          errorCode={this.state.statusCode}
+          errorMsg={statusMsg}
         />
+        {showLoadingIndicator ? (
+          <View style={[styles.loadingIndicatorContainer, { height }, { width }]}>
+            <ActivityIndicator size="large" />
+          </View>
+        ) : (
+          <React.Fragment />
+        )}
       </View>
     );
   }

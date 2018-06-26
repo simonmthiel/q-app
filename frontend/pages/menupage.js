@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, TextInput, TouchableHighlight } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  TextInput,
+  TouchableHighlight,
+  AsyncStorage,
+} from 'react-native';
 import { createStackNavigator, params } from 'react-navigation';
 
 import * as constants from './../config/config';
@@ -13,8 +21,10 @@ export default class MenuPage extends React.Component {
     title: TEXT.menupage.headline,
     headerRight: (
       <Button
-        onPress={() => alert('Logout noch nicht implementiert')}
-        title="Logout"
+        onPress={() => {
+          console.warn('Button action not yet implemented');
+        }}
+        title="Button"
         color="#000"
       />
     ),
@@ -22,6 +32,7 @@ export default class MenuPage extends React.Component {
     // headerTruncatedBackTitle: 'Zurück',
     // headerBackTitle: 'Zurück',
   };
+
   constructor(props) {
     super(props);
     this.token = this.props.navigation.getParam('tokenP', 'NO-TOKEN');
@@ -78,6 +89,17 @@ export default class MenuPage extends React.Component {
           underlayColor="#fff"
         >
           <Text style={styles.buttonText}>Community Fragen</Text>
+        </TouchableHighlight>
+
+        <TouchableHighlight
+          style={styles.buttonMenu}
+          onPress={() => {
+            AsyncStorage.removeItem('@MathApp:token');
+            this.props.navigation.navigate('Home');
+          }}
+          underlayColor="#ddd"
+        >
+          <Text style={styles.buttonText}>Logout</Text>
         </TouchableHighlight>
       </View>
     );

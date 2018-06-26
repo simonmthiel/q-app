@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, TextInput, TouchableHighlight } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  TextInput,
+  TouchableHighlight,
+  AsyncStorage,
+} from 'react-native';
 import { createStackNavigator, params } from 'react-navigation';
 
 import ErrorContainer from './../components/errorcontainer';
@@ -14,9 +22,24 @@ import * as styleSheet from './../styles/styles';
 const styles = StyleSheet.create(styleSheet.global);
 
 export default class InitialPage extends React.Component {
+  constructor(props) {
+    super(props);
+    AsyncStorage.getItem('@MathApp:token', (err, result) => {
+      console.log('Retrieved token from local device storage: ', result);
+      if (result) {
+        this.navigate('Menu', result);
+      }
+    });
+  }
   componentDidMount() {
     const sampleLog = utilFunc.shortenText(30, 'Initial page loaded!');
     utilFunc.logger(sampleLog);
+  }
+
+  navigate(navigationTarget, token) {
+    this.props.navigation.navigate(navigationTarget, {
+      tokenP: token,
+    });
   }
 
   // utilFunctions.logger('sdabad asdf asdf');
@@ -71,32 +94,6 @@ export default class InitialPage extends React.Component {
           underlayColor="#fff"
         >
           <Text style={styles.buttonText}>Registieren</Text>
-        </TouchableHighlight>
-
-        <TouchableHighlight
-          style={customDebuggingButton}
-          onPress={() => {
-            this.props.navigation.navigate('Menu', {
-              tokenP:
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YjE1MDdmYjA4MmY2ODAwMTRlZDkwNDMiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTI4MTA0OTU1fQ.uM0TPK27FG5GXa0ZUAbYGt_IzPuAhEesRVzIT46wz7I',
-            });
-          }}
-          underlayColor="#ff0"
-        >
-          <Text style={styles.buttonText}>debug: login@thiel.de</Text>
-        </TouchableHighlight>
-
-        <TouchableHighlight
-          style={customDebuggingButton}
-          onPress={() => {
-            this.props.navigation.navigate('Menu', {
-              tokenP:
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YjE1NDVlOGE5NTI3NjAwMTRhZTIwNDQiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTI4MTIwODA4fQ.2XERYjcPbEuO7xgDIC35JP9fTklmn-zHJBOGIQfMfOs',
-            });
-          }}
-          underlayColor="#ff0"
-        >
-          <Text style={styles.buttonText}>debug: login2@thiel.de</Text>
         </TouchableHighlight>
       </View>
     );

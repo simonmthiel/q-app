@@ -24,7 +24,7 @@ module.exports = {
   questionoverviewpage: {
     headline: 'Deine Fragenübersicht',
   },
-  registrationpage: {},
+  registrationpage: { errorDuplicate: 'Bitte überprüfe deine Eingabe' },
   errorcontainer: {
     unknownError: 'Es ist ein unbekannter Fehler aufgetreten',
     headline_code_901: 'Netzwerkfehler',

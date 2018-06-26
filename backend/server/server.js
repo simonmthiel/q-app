@@ -304,11 +304,12 @@ app.patch('/questions/:id', authenticate, (req, res) => {
 app.post('/users', (req, res) => {
   const body = _.pick(req.body, ['email', 'password']);
   const user = new User(body);
-
+  console.log('user: ', user);
   user
     .save()
     .then(() => user.generateAuthToken())
     .then((token) => {
+      console.log('TOKEN: ', token);
       res.header('x-auth', token).send(user);
     })
     .catch((e) => {
@@ -322,10 +323,21 @@ app.get('/users/me', authenticate, (req, res) => {
 
 // POST /login
 app.post('/login', (req, res) => {
+  console.log('into login API');
+
   const body = _.pick(req.body, ['email', 'password']);
+  console.log('body: ', body);
+
   User.findByCredentials(body.email, body.password).then(
     (user) => {
-      res.header('x-auth', user.tokens[0].token).send(user);
+      user
+        .generateAuthToken()
+        .then((token) => {
+          res.header('x-auth', token).send(user);
+        })
+        .catch((e) => {
+          res.status(400).send(e);
+        });
     },
     (e) => {
       res.status(400).send(e);
